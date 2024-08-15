@@ -12,6 +12,7 @@ from PIL import Image
 def detect_sequences(
     directory, recursive=False, depth=1, include_resolution=False, include_size=False
 ):
+<<<<<<< HEAD
     """
     Parcours le répertoire donné et détecte les séquences d'images.
     Retourne une liste de séquences trouvées avec leurs informations associées.
@@ -36,6 +37,13 @@ def detect_sequences(
         :param current_depth: Profondeur actuelle dans l'arborescence de répertoires
         :param base_path: Chemin de base utilisé pour calculer le chemin relatif
         """
+=======
+    sequences = defaultdict(list)
+
+    regex = re.compile(r"^(.*?)(\.\w+)?\.(\d+)\.(\w+)$")
+
+    def explore_directory(current_directory, current_depth, base_path):
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
         if current_depth > depth:
             return
 
@@ -62,19 +70,28 @@ def detect_sequences(
 
                     file_path = os.path.join(root, filename)
 
+<<<<<<< HEAD
                     # Obtenir la résolution de l'image si demandé
+=======
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
                     if include_resolution:
                         with Image.open(file_path) as img:
                             resolution = f"{img.width}x{img.height}"
                     else:
                         resolution = None
 
+<<<<<<< HEAD
                     # Obtenir la taille du fichier si demandé
+=======
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
                     file_size = os.path.getsize(file_path) if include_size else None
 
                     sequences[key].append((frame_number, resolution, file_size))
 
+<<<<<<< HEAD
             # Si la récursion est activée et qu'on n'a pas encore atteint la profondeur maximale
+=======
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
             if recursive and current_depth < depth:
                 for subdir in dirs:
                     explore_directory(
@@ -100,9 +117,14 @@ def detect_sequences(
         resolutions = set(res[1] for res in frames if res[1] is not None)
         total_size = sum(f[2] for f in frames if f[2] is not None)
         average_size = total_size // len(frames) if total_size and frames else None
+<<<<<<< HEAD
         frame_count = len(frames)  # Nombre d'images dans la séquence
 
         # Détection des frames manquantes
+=======
+        frame_count = len(frames)  # Count of images in the sequence
+
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
         missing_start = None
         for i in range(frames[0][0], frames[-1][0]):
             if i not in [f[0] for f in frames]:
@@ -146,12 +168,16 @@ def detect_sequences(
 
 
 def format_size(size):
+<<<<<<< HEAD
     """
     Formate une taille en octets pour être plus lisible (par ex. en KB, MB, etc.).
 
     :param size: Taille en octets
     :return: Taille formatée en chaîne de caractères
     """
+=======
+    """Format bytes as a human-readable size"""
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     for unit in ["B", "KB", "MB", "GB", "TB"]:
         if size < 1024:
             return f"{size:.1f} {unit}"
@@ -165,6 +191,7 @@ def display_results(
     include_count=False,
     rv_mode=False,
 ):
+<<<<<<< HEAD
     """
     Affiche les résultats des séquences d'images détectées de manière formatée ou sous forme de commandes `rv`.
 
@@ -175,6 +202,8 @@ def display_results(
     :param rv_mode: Si vrai, génère des commandes `rv` pour chaque séquence
     """
     # Trier les résultats par chemin, nom, etc.
+=======
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     results.sort(key=lambda x: (x[0], x[1], x[3], x[2] != "", x[2]))
 
     if rv_mode:
@@ -195,7 +224,11 @@ def display_results(
         ) in results:
             full_name = f"{name}{sub_category}.*.{extension}"
             if relative_path != last_relative_path and last_relative_path is not None:
+<<<<<<< HEAD
                 print("")  # Ajouter une ligne vide entre les sous-dossiers
+=======
+                print("")  # Add an empty line between different subdirectories
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
             if relative_path != ".":
                 print(f"rv {os.path.join(relative_path, full_name)}")
             else:
@@ -203,9 +236,15 @@ def display_results(
             last_relative_path = relative_path
 
     else:
+<<<<<<< HEAD
         # Calculer les largeurs de colonnes optimales
         max_path_len = max(len(res[0]) for res in results) + 2
         max_path_len = min(max_path_len, 30)  # Limiter à 30 caractères
+=======
+        # Calculate the optimal column widths
+        max_path_len = max(len(res[0]) for res in results) + 2
+        max_path_len = min(max_path_len, 30)  # Limit to 30 characters
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
 
         header = (
             f"{'path':<{max_path_len}} {'name':<20} {'range':<15} {'pad':<4} {'ext':<4}"
@@ -215,10 +254,19 @@ def display_results(
         if include_resolution:
             header += f" {'resolution':<12}"
         if include_size:
+<<<<<<< HEAD
             header += f"    {'size':<10} {'avg size':<10}"  # Ajouter des espaces supplémentaires avant size
         header += f" {'missing':<20}"
 
         # Imprimer l'en-tête et la ligne de séparation
+=======
+            header += (
+                f"    {'size':<10} {'avg size':<10}"  # Added extra spaces before size
+            )
+        header += f" {'missing':<20}"
+
+        # Print header and separator line
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
         print(header)
         print("=" * len(header))
 
@@ -252,66 +300,111 @@ def display_results(
             if include_size:
                 size_str = format_size(total_size) if total_size else ""
                 avg_size_str = format_size(average_size) if average_size else ""
+<<<<<<< HEAD
                 line += f"    {size_str:<10} {avg_size_str:<10}"  # Ajouter des espaces supplémentaires avant size
+=======
+                line += f"    {size_str:<10} {avg_size_str:<10}"  # Added extra spaces before size
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
             line += f" {missing:<20}"
             print(line)
 
 
 def main():
+<<<<<<< HEAD
     # Configuration de l'analyseur d'arguments pour le script
     parser = argparse.ArgumentParser(
         description="Outil pour détecter et lister les séquences d'images dans un répertoire.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+=======
+    parser = argparse.ArgumentParser(
+        description="Tool for detecting and listing image sequences in a directory."
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "directory",
         nargs="?",
         default=os.getcwd(),
+<<<<<<< HEAD
         help="Répertoire à analyser (par défaut : répertoire courant)",
+=======
+        help="Directory to analyze (default: current working directory)",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "-r",
         "--recursive",
         action="store_true",
+<<<<<<< HEAD
         help="Lister récursivement les séquences dans les sous-répertoires",
+=======
+        help="Recursively list sequences in subdirectories",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "-d",
         "--depth",
         type=int,
         default=1,
+<<<<<<< HEAD
         help="Profondeur de la récursion (utilisé seulement si --recursive est activé)",
+=======
+        help="Depth of recursion (only used if --recursive is set)",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "--resolution",
         action="store_true",
+<<<<<<< HEAD
         help="Inclure la résolution des images dans la sortie",
+=======
+        help="Include resolution of images in the output",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "--size",
         action="store_true",
+<<<<<<< HEAD
         help="Inclure la taille totale et la taille moyenne des images dans la sortie",
+=======
+        help="Include size and average size of images in the output",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "--count",
         action="store_true",
+<<<<<<< HEAD
         help="Inclure le nombre d'images dans chaque séquence",
+=======
+        help="Include the count of images in each sequence",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
     parser.add_argument(
         "--rv",
         action="store_true",
+<<<<<<< HEAD
         help="Générer des commandes prêtes à exécuter pour lancer un player sur les séquences d'images",
+=======
+        help="Generate ready-to-run commands for launching a player on the image sequences",
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     )
 
     args = parser.parse_args()
 
     if args.rv:
+<<<<<<< HEAD
         args.resolution = False  # Désactiver la résolution si le mode RV est activé
 
     if not args.recursive:
         args.depth = 1  # Limiter la profondeur à 1 si la récursion n'est pas activée
 
     # Détecter les séquences d'images
+=======
+        args.resolution = False  # Disable resolution if RV mode is enabled
+
+    if not args.recursive:
+        args.depth = 1  # Set depth to 1 if recursion is not enabled
+
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     sequences = detect_sequences(
         args.directory,
         recursive=args.recursive,
@@ -319,8 +412,11 @@ def main():
         include_resolution=args.resolution,
         include_size=args.size,
     )
+<<<<<<< HEAD
 
     # Afficher les résultats
+=======
+>>>>>>> 816dfba4c13302be6fda2bd845e25e7aae74ab69
     display_results(
         sequences,
         include_resolution=args.resolution,
